@@ -73,7 +73,7 @@ const HomePage = () => {
         
         <div className="grid grid-cols-5 gap-4">
           {books.slice(0, 5).map((book) => (
-            <div key={book.id} className="border border-gray-200 p-2 relative">
+            <div key={book.id} className="border border-gray-200 p-2 relative transition-shadow duration-300 hover:shadow-[0px_10px_30px_rgba(0,0,0,0.3)]">
               <div className="mb-2 h-40 bg-gray-100 flex items-center justify-center">
                 <img 
                   src={`/api/placeholder/180/160`} 
@@ -103,7 +103,8 @@ const HomePage = () => {
       {/* Second Row of Books */}
       <div className="grid grid-cols-5 gap-4">
         {books.slice(5, 10).map((book) => (
-          <div key={book.id} className={`border border-gray-200 p-7 relative ${book.id === 7 ? 'border-blue-500 border-2' : ''}`}>
+          <div key={book.id} className={`border border-gray-200 p-7 relative transition-shadow duration-300 hover:shadow-[0px_10px_30px_rgba(0,0,0,0.3)] ${book.id === 7 ? 'border-blue-500 border-2' : ''}`}>
+        
             <div className="mb-2 h-40 bg-gray-100 flex items-center justify-center">
               <img 
                 src={`/api/placeholder/180/160`} 
