@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Signup from "./Signup";
+import { Link } from "react-router-dom";  // Use Link for navigation
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -47,9 +47,9 @@ export default function Login() {
         </form>
         <p className="text-sm text-gray-600 mt-4 text-center">
           Don't have an account?{" "}
-          <a href="#" className="text-blue-500 hover:underline">
+          <Link to="/Signup" className="text-blue-500 hover:underline">
             Sign up
-          </a>
+          </Link>
         </p>
       </div>
     </div>
