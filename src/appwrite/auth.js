@@ -1,8 +1,5 @@
 import conf from "../conf/conf";
-import {Client,Account,ID, Databases} from "appwrite"
-
-//We are doing this to avoid vendor lock-in
-//We can easily switch to another service provider
+import {Client,Account,ID, Databases,Storage} from "appwrite"
 
 export class AuthService{
     client = new Client();
