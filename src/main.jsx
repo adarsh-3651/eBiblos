@@ -1,14 +1,15 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App'
-import { Provider } from 'react-redux'
-import store from './store/store'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App'; // Main App component
+import './index.css'; // Styles for the app
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </StrictMode>,
-)
+const rootElement = document.getElementById('root');
+
+const root = ReactDOM.createRoot(rootElement);
+
+root.render(
+  <React.StrictMode>
+    <App /> {/* Render App component */}
+  </React.StrictMode>
+);
+// If you want to start measuring performance in your app, pass a function
