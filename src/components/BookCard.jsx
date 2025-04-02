@@ -2,9 +2,9 @@ import React, { useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../redux/actions/cartActions';
-import { addToWishlist } from '../redux/actions/wishlistActions';
-import { formatPrice } from '../utils/formatPrice';
+// import { addToCart } from '../redux/actions/cartActions';
+// import { addToWishlist } from '../redux/actions/wishlistActions';
+// import { formatPrice } from '../utils/formatPrice';
 import { useTranslation } from 'react-i18next';
 import { useMediaQuery } from 'react-responsive';
 import { useTheme } from '@mui/material/styles';
@@ -43,7 +43,7 @@ const BookCard = ({ book }) => {
                 <CardContent>
                     <Typography variant="h6" gutterBottom>{book.title}</Typography>
                     <Typography variant="subtitle2" color="textSecondary">{book.author}</Typography>
-                    <Typography variant="h6" color="primary">{formatPrice(book.price)}</Typography>
+                    <Typography variant="h6" color="primary">{}</Typography>
                 </CardContent>
                 <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Button

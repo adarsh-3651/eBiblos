@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPosts } from '../redux/actions/postActions'; // Assuming you've created this action
+// import { fetchPosts } from '../redux/actions/postActions'; // Assuming you've created this action
 import { useTranslation } from 'react-i18next';
 import { Box, Typography, CircularProgress, Snackbar, Alert, Button, Card, CardContent, CardMedia } from '@mui/material';
 import { useSpring, animated } from 'react-spring';
