@@ -1,15 +1,15 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useSpring, animated } from 'react-spring';
+// import { useSpring, animated } from 'react-spring';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, Snackbar, Alert, CircularProgress, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import EditIcon from '@mui/icons-material/Edit';
 import { useSnackbar } from 'notistack';
-import appwriteService from '../appwrite/config';  // Appwrite integration for book-related operations
-import { formatPrice } from '../utils/formatPrice';  // Utility for formatting prices
+// import appwriteService from '../appwrite/config';  // Appwrite integration for book-related operations
+// import { formatPrice } from '../utils/formatPrice';  // Utility for formatting prices
 import { fetchBooks, deleteBook } from '../redux/actions/bookActions';  // Redux actions
 import { addToCart } from '../redux/actions/cartActions';  // Redux action for adding to cart
 import { addToWishlist } from '../redux/actions/wishlistActions';  // Redux action for adding to wishlist
@@ -31,19 +31,19 @@ const BookService = () => {
 
   const userId = useSelector((state) => state.auth.userId);  // Assuming the userId is stored in auth state
 
-  useEffect(() => {
-    appwriteService.getBooks()
-      .then((response) => {
-        if (response) {
-          setBooks(response.documents.filter(book => book.userId === userId));  // Filter books by userId
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        setError(t('error_loading_books'));
-        setLoading(false);
-      });
-  }, [t, userId]);
+  // useEffect(() => {
+  //   appwriteService.getBooks()
+  //     .then((response) => {
+  //       if (response) {
+  //         setBooks(response.documents.filter(book => book.userId === userId));  // Filter books by userId
+  //         setLoading(false);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       setError(t('error_loading_books'));
+  //       setLoading(false);
+  //     });
+  // }, [t, userId]);
 
   const handleDeleteBook = useCallback((bookId) => {
     setBookToDelete(bookId);

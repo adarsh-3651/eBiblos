@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBooks, deleteBook } from '../redux/actions/bookActions';
+// import { fetchBooks, deleteBook } from '../redux/actions/bookActions';
 import { Box, Typography, Button, Snackbar, Alert, CircularProgress, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { useSpring, animated } from 'react-spring';
+// import { useSpring, animated } from 'react-spring';
 import BookCard from '../components/BookCard';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
-import appwriteService from "../appwrite/config"; // Assuming this provides the books API call
-import { formatPrice } from '../utils/formatPrice';
+// import appwriteService from "../appwrite/config"; // Assuming this provides the books API call
+// import { formatPrice } from '../utils/formatPrice';
 
 const SellerDashboard = () => {
     const { t } = useTranslation();
@@ -25,19 +25,19 @@ const SellerDashboard = () => {
 
     const userId = useSelector((state) => state.auth.userId); // Assuming userId is in auth state
 
-    useEffect(() => {
-        appwriteService.getBooks()
-            .then((response) => {
-                if (response) {
-                    setBooks(response.documents.filter(book => book.userId === userId)); // Filter books by userId
-                    setLoading(false);
-                }
-            })
-            .catch((err) => {
-                setError(t('error_loading_books'));
-                setLoading(false);
-            });
-    }, [t, userId]);
+    // useEffect(() => {
+    //     appwriteService.getBooks()
+    //         .then((response) => {
+    //             if (response) {
+    //                 setBooks(response.documents.filter(book => book.userId === userId)); // Filter books by userId
+    //                 setLoading(false);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             setError(t('error_loading_books'));
+    //             setLoading(false);
+    //         });
+    // }, [t, userId]);
 
     const handleDeleteBook = useCallback((bookId) => {
         setBookToDelete(bookId);

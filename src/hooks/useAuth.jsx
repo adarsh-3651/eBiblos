@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMediaQuery } from 'react-responsive';
 import { useTheme } from '@mui/material/styles';
-import { useSpring, animated } from 'react-spring';
+// import { useSpring, animated } from 'react-spring';
 import { Box, Typography, Button, Snackbar, Alert, CircularProgress, IconButton } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+// import FavoriteIcon from '@mui/icons-material/Favorite';
+// import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useSnackbar } from 'notistack';
 
 // Actions
@@ -16,10 +16,10 @@ import { addToWishlist } from '../redux/actions/wishlistActions';
 import { fetchBooks, deleteBook } from '../redux/actions/bookActions';
 
 // Utils
-import { formatPrice } from '../utils/formatPrice';
+// import { formatPrice } from '../utils/formatPrice';
 
 // Appwrite
-import appwriteService from '../appwrite/config';
+// import appwriteService from '../appwrite/config';
 
 // Context
 import AuthContext from '../context/AuthContext'; // Assuming you have an AuthContext to provide auth details
@@ -43,19 +43,19 @@ const useAuth = () => {
 
   const userId = useSelector((state) => state.auth.userId);  // Assuming userId is in auth state
 
-  useEffect(() => {
-    appwriteService.getBooks()
-      .then((response) => {
-        if (response) {
-          setBooks(response.documents.filter((book) => book.userId === userId)); // Filter books by userId
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        setError(t('error_loading_books'));
-        setLoading(false);
-      });
-  }, [t, userId]);
+  // useEffect(() => {
+  //   appwriteService.getBooks()
+  //     .then((response) => {
+  //       if (response) {
+  //         setBooks(response.documents.filter((book) => book.userId === userId)); // Filter books by userId
+  //         setLoading(false);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       setError(t('error_loading_books'));
+  //       setLoading(false);
+  //     });
+  // }, [t, userId]);
 
   const handleAddToCart = (book) => {
     dispatch(addToCart(book));

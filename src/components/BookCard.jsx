@@ -9,9 +9,9 @@ import { useTranslation } from 'react-i18next';
 import { useMediaQuery } from 'react-responsive';
 import { useTheme } from '@mui/material/styles';
 import { Card, CardContent, CardMedia, Typography, Button, IconButton, Snackbar, Alert, CardActions, Box } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { animated, useSpring } from 'react-spring';
+// import FavoriteIcon from '@mui/icons-material/Favorite';
+// import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+// import { animated, useSpring } from 'react-spring';
 
 const BookCard = ({ book }) => {
     const { t } = useTranslation();

@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 // import { fetchPosts } from '../redux/actions/postActions'; // Assuming you've created this action
 import { useTranslation } from 'react-i18next';
 import { Box, Typography, CircularProgress, Snackbar, Alert, Button, Card, CardContent, CardMedia } from '@mui/material';
-import { useSpring, animated } from 'react-spring';
+// import { useSpring, animated } from 'react-spring';
 import { useMediaQuery } from 'react-responsive';
-import appwriteService from "../appwrite/config"; // Assuming this provides the posts API call
+// import appwriteService from "../appwrite/config"; // Assuming this provides the posts API call
 
 const Home = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const { t } = useTranslation();
     
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -18,19 +18,19 @@ const Home = () => {
     
     const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
     
-    useEffect(() => {
-        appwriteService.getPosts()
-            .then((response) => {
-                if (response) {
-                    setPosts(response.documents);
-                    setLoading(false);
-                }
-            })
-            .catch((err) => {
-                setError(t('error_loading_posts'));
-                setLoading(false);
-            });
-    }, [t]);
+    // useEffect(() => {
+    //     appwriteService.getPosts()
+    //         .then((response) => {
+    //             if (response) {
+    //                 setPosts(response.documents);
+    //                 setLoading(false);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             setError(t('error_loading_posts'));
+    //             setLoading(false);
+    //         });
+    // }, [t]);
 
     const handlePostClick = useCallback((post) => {
         // Placeholder for post click handling (maybe navigate to post details)
@@ -38,7 +38,7 @@ const Home = () => {
     }, [t]);
 
     // Animation for the list of posts
-    const fadeIn = useSpring({ opacity: loading ? 0 : 1, from: { opacity: 0 } });
+    // const fadeIn = useSpring({ opacity: loading ? 0 : 1, from: { opacity: 0 } });
 
     if (loading) return <Box display="flex" justifyContent="center" mt={5}><CircularProgress /></Box>;
     if (error) return <Typography color="error">{error}</Typography>;

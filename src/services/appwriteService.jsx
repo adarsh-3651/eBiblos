@@ -1,7 +1,16 @@
 import { Client, Account, Databases, Storage } from 'appwrite';
 
 const client = new Client();
-client.setEndpoint('https://[YOUR_APPWRITE_ENDPOINT]').setProject('[YOUR_PROJECT_ID]'); // Replace with your Appwrite endpoint and project ID
+
+// Replace with your actual Appwrite endpoint and project ID
+const APPWRITE_ENDPOINT = 'https://[YOUR_APPWRITE_ENDPOINT]';
+const APPWRITE_PROJECT_ID = '[YOUR_PROJECT_ID]';
+
+if (!APPWRITE_ENDPOINT || !APPWRITE_PROJECT_ID) {
+  console.error('Appwrite endpoint or project ID is not configured.');
+}
+
+client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID); 
 
 const account = new Account(client);
 const databases = new Databases(client);
@@ -99,6 +108,9 @@ export const logout = async () => {
 
 export const getCurrentUser = async () => {
   try {
+    if (!APPWRITE_ENDPOINT || !APPWRITE_PROJECT_ID) {
+      throw new Error('Appwrite client is not properly configured.');
+    }
     const response = await account.get();
     return response; // Returns the current user object
   } catch (error) {
@@ -116,4 +128,17 @@ export const register = async (email, password) => {
     console.error('Error registering user:', error);
     throw error;
   }
+};
+
+export const appwriteService = {
+  getBooks,
+  getBookById,
+  createBook,
+  updateBook,
+  deleteBook,
+  uploadImage,
+  login,
+  logout,
+  getCurrentUser,
+  register
 };

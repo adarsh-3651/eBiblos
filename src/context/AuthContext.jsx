@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import appwriteService from '../services/appwriteService'; // Adjust the import path as necessary
+import {appwriteService} from '../services/appwriteService'; // Adjust the import path as necessary
 
 const AuthContext = createContext();
 
