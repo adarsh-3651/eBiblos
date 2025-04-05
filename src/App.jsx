@@ -1,6 +1,6 @@
 import React from 'react';
 import { AuthProvider } from './context/AuthContext';
-import { CartProvider } from './context/CartContext'; // Fixed import path (renamed from CardContext)
+import { CartProvider } from './context/CardContext'; // Fixed import path (renamed from CardContext)
 import AppRoutes from './routes/AppRoutes';
 import { SnackbarProvider } from 'notistack';
 import { ThemeProvider, createTheme } from '@mui/material/styles'; // Added for consistent theming
