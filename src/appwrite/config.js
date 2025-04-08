@@ -85,9 +85,9 @@ export class Service {
             const response = await this.bucket.createFile(
                 conf.appwriteBucketId,
                 ID.unique(),
-                file
+                file,
             );
-            return response; // Returning the uploaded file details (e.g., file ID)
+            return response;
         } catch (error) {
             console.error("Error uploading file:", error);
             throw new Error("Failed to upload file.");
@@ -106,11 +106,11 @@ export class Service {
 
     async getFilePreview(fileId) {
         try {
-            return await this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
-        } catch (error) {
-            console.error("Appwrite service error: getFilePreview", error);
+            return this.bucket.getFileDownload(conf.appwriteBucketId, fileId);
+          } catch (error) {
+            console.error("Appwrite service error: getFileURL", error);
+          }
         }
-    }
 }
 
 const service = new Service();

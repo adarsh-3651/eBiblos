@@ -41,7 +41,11 @@ export class AuthService {
 
     async getCurrentUser() {
         try {
-            return await this.account.get();
+            const user = await this.account.get();
+            if (user) {
+                console.log("Current User:", user);
+                return user;
+            }
         } catch (error) {
             console.error("Get Current User Error:", error.message);
             return null; // Avoids app crashes when no session exists
