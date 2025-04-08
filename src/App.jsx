@@ -1,43 +1,37 @@
-import React from 'react';
-import { AuthProvider } from './context/AuthContext';
-import { CartProvider } from './context/CardContext'; // Fixed import path (renamed from CardContext)
-import AppRoutes from './routes/AppRoutes';
-import { SnackbarProvider } from 'notistack';
-import { ThemeProvider, createTheme } from '@mui/material/styles'; // Added for consistent theming
-import CssBaseline from '@mui/material/CssBaseline'; // For CSS reset
+import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import authService from "./appwrite/auth"
+import {login, logout} from "./store/authSlice"
+import { Footer, Header } from './components'
+import { Outlet } from 'react-router-dom'
 
-// Create a theme instance
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2', // Customize your primary color
-    },
-    secondary: {
-      main: '#dc004e', // Customize your secondary color
-    },
-  },
-});
+function App() {
+  const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
 
-const App = () => {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AuthProvider>
-        <CartProvider>
-          <SnackbarProvider 
-            maxSnack={3}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            autoHideDuration={3000}
-          >
-            <AppRoutes />
-          </SnackbarProvider>
-        </CartProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  );
-};
+  useEffect(() => {
+    authService.getCurrentUser()
+    .then((userData) => {
+      if (userData) {
+        dispatch(login({userData}))
+      } else {
+        dispatch(logout())
+      }
+    })
+    .finally(() => setLoading(false))
+  }, [])
+  
+  return !loading ? (
+    <div className='min-h-screen flex flex-wrap content-between bg-white'>
+      <div className='w-full block'>
+        <Header />
+        <main>
+        <Outlet />
+        </main>
+        <Footer />
+      </div>
+    </div>
+  ) : null
+}
 
-export default App;
+export default App
