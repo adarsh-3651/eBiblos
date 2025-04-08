@@ -1,15 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App'; // Main App component
-import './index.css'; // Styles for the app
+// src/index.js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import { Provider } from "react-redux";
+import store from "./store/store.js";
+import { RouterProvider } from "react-router-dom";
+import router from "./routes/routes.js"; // Importing the organized routes
 
-const rootElement = document.getElementById('root');
-
-const root = ReactDOM.createRoot(rootElement);
-
-root.render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App /> {/* Render App component */}
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
-// If you want to start measuring performance in your app, pass a function
