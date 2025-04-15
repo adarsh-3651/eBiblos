@@ -1,21 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import logo from '../assets/logo.png';
 
-function Logo({ size = '50px' }) {
-  return (
-    <figure style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <img 
-        src="/logo.png" 
-        alt="Company Logo" 
-        style={{ 
-          width: size, 
-          height: size, 
-          borderRadius: '50%', 
-          objectFit: 'cover', 
-          border: '2px solid #ddd' // Optional border for styling
-        }} 
-      />
-    </figure>
-  );
-}
+const Logo = ({ size = "50px", className = "" }) => (
+  <img 
+    src={logo}
+    alt="Application Logo"
+    width={size}
+    className={`h-auto ${className}`}
+    loading="lazy"
+  />
+);
+
+Logo.propTypes = {
+  size: PropTypes.string,
+  className: PropTypes.string
+};
 
 export default Logo;
