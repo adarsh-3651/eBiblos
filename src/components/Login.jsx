@@ -44,39 +44,40 @@ function Login() {
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-lg z-50">
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-white to-ice-blue-50 relative">
             {/* Background Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-70"></div>
+            <div className="absolute inset-0 bg-black/60"></div>
 
             {/* Login Form */}
-            <div className="relative z-10 w-full max-w-lg bg-white bg-opacity-10 backdrop-blur-lg shadow-xl rounded-xl p-10 space-y-6">
+            <div className="relative z-10 w-full max-w-md bg-white rounded-xl p-10 space-y-8 shadow-2xl backdrop-blur-lg">
                 {/* Logo */}
                 <div className="flex justify-center mb-6">
-                    <Logo width="100px" />
+                    <Link to="/">
+                         <Logo width="80px" />
+                    </Link>
                 </div>
-
-                <h2 className="text-center text-3xl font-bold text-white">Sign In</h2>
-                <p className="text-center text-sm text-white/70">
+                <h2 className="text-center text-2xl font-bold text-gray-800">Sign In</h2>
+                <p className="text-center text-sm text-gray-500">
                     Don&apos;t have an account?&nbsp;
                     <Link
                         to="/signup"
-                        className="font-medium text-blue-400 transition-all duration-300 hover:underline"
+                        className="font-medium text-blue-500 hover:underline"
                     >
                         Sign Up
                     </Link>
                 </p>
 
                 {/* Error Message */}
-                {error && <p className="text-red-400 text-center text-sm">{error}</p>}
+                {error && <p className="text-red-500 text-center text-sm">{error}</p>}
 
                 {/* Form */}
-                <form onSubmit={handleSubmit(login)} className="space-y-5">
-                    <div className="space-y-4">
+                <form onSubmit={handleSubmit(login)} className="space-y-6">
+                    <div className="space-y-5">
                         <Input
                             label="Email"
                             placeholder="Enter your email"
                             type="email"
-                            className="bg-white bg-opacity-10 text-white placeholder-white/70 border-2 border-white/20 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                            className="bg-black border-2 border-black rounded-lg px-4 py-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300"
                             {...register("email", {
                                 required: "Email is required",
                                 validate: {
@@ -90,7 +91,7 @@ function Login() {
                             label="Password"
                             type="password"
                             placeholder="Enter your password"
-                            className="bg-white bg-opacity-10 text-white placeholder-white/70 border-2 border-white/20 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                            className="bg-gray-50 border-2 border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300"
                             {...register("password", { required: "Password is required" })}
                         />
                     </div>
@@ -98,7 +99,7 @@ function Login() {
                     {/* Sign-In Button */}
                     <Button
                         type="submit"
-                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:from-purple-600 hover:to-blue-500 shadow-lg"
+                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold py-3 rounded-lg shadow-lg hover:scale-105 transform transition-all duration-300"
                     >
                         Sign In
                     </Button>
@@ -106,19 +107,19 @@ function Login() {
 
                 {/* OR Divider */}
                 <div className="flex items-center justify-center my-4">
-                    <span className="bg-white/30 w-1/3 h-[1px]"></span>
-                    <span className="text-sm text-white/70 mx-3">OR</span>
-                    <span className="bg-white/30 w-1/3 h-[1px]"></span>
+                    <span className="bg-gray-300 w-1/3 h-[1px]"></span>
+                    <span className="text-sm text-gray-500 mx-3">OR</span>
+                    <span className="bg-gray-300 w-1/3 h-[1px]"></span>
                 </div>
 
                 {/* Google Sign-In Button */}
                 <button
-                    className="flex items-center justify-center gap-3 px-6 py-3 w-full bg-white text-black border border-gray-300 rounded-lg hover:bg-gray-100 transition"
-                        onClick={handleGoogleLogin}>
+                    className="flex items-center justify-center gap-3 px-6 py-3 w-full bg-white text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-300"
+                    onClick={handleGoogleLogin}
+                >
                     <img src={googleLogo} alt="Google Logo" className="w-6 h-6" />
                     <span className="text-lg font-medium">Sign in with Google</span>
                 </button>
-
             </div>
         </div>
     );

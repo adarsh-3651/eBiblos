@@ -1,10 +1,10 @@
 // src/routes/appRoutes.js
 import App from "../App.jsx";
 import Home from "../pages/Home.jsx";
-import AddPost from "../pages/AddPost.jsx";
+import AddPost from "../pages/SellProduct.jsx";
 import EditPost from "../pages/EditPost.jsx";
-import Post from "../pages/Post.jsx";
-import AllPosts from "../pages/AllPosts.jsx";
+import Post from "../pages/ProductCard.jsx";
+import AllPosts from "../pages/AllProducts.jsx";
 import { AuthLayout } from "../components/index.js";
 
 const appRoutes = [
