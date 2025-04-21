@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Input, Select } from "..";
+import { Button, Input } from "..";
 import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { districts } from "../../components/Location";
@@ -21,11 +21,11 @@ export default function PostForm({ post }) {
       dateAD: post?.dateAD || "",
       category: post?.category || "",
       phoneNo: post?.phoneNo || "",
+      location: post?.location || "Nepal",
     },
   });
 
   const navigate = useNavigate();
-  const [selectedLocation, setSelectedLocation] = useState(post?.location || "Nepal");
   const [imagePreviews, setImagePreviews] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
   const [currentUsername, setCurrentUsername] = useState("");
@@ -42,15 +42,20 @@ export default function PostForm({ post }) {
     fetchUser();
   }, []);
 
-  // Format the date to "YYYY-MM-DD" and remove the time portion
+  useEffect(() => {
+    if (post?.previewImages?.length) {
+      console.log("Preview images received:", post.previewImages);
+      setImagePreviews(post.previewImages);
+    }
+  }, [post]);
+
   const formatDate = (date) => {
-    const formattedDate = new Date(date).toISOString().split("T")[0]; // Split at T and take the date part
-    return formattedDate;
+    return new Date(date).toISOString().split("T")[0];
   };
 
   const handleDateADChange = (e) => {
     const adDate = e.target.value;
-    setValue("dateAD", formatDate(adDate)); // Format the date properly
+    setValue("dateAD", formatDate(adDate));
   };
 
   const handleImageChange = (e) => {
@@ -72,38 +77,39 @@ export default function PostForm({ post }) {
 
   const submit = async (data) => {
     try {
-      const slug = generateSlug(data.title);
+      if (imageFiles.length === 0) {
+        Swal.fire("Image Required", "Please upload at least one image.", "warning");
+        return;
+      }
 
-      // Upload images to Appwrite and collect their IDs
-      const uploadedImageIds = [];
+      const slug = generateSlug(data.title);
+      let uploadedImageIds = post?.featuredImage || [];
 
       for (let image of imageFiles) {
         try {
-          const imageId = await appwriteService.uploadFile(image); // <-- This returns only $id
-          if (imageId) uploadedImageIds.push(imageId); // not imageId.$id!
+          const imageId = await appwriteService.uploadFile(image);
+          if (imageId) uploadedImageIds.push(imageId);
         } catch (err) {
           console.error("Image upload failed for:", image.name);
         }
       }
-      
 
       const postData = {
         ...data,
-        rate: parseFloat(data.rate), // Convert to float here
+        rate: parseFloat(data.rate),
         slug,
         userId,
         username: currentUsername,
-        postedBy: currentUsername, // Store the current user's name
+        postedBy: currentUsername,
         status: "active",
-        location: selectedLocation,
-        featuredImage: uploadedImageIds, // Array of image IDs
+        featuredImage: uploadedImageIds,
       };
 
       const dbPost = post
         ? await appwriteService.updatePost(post.$id, postData)
         : await appwriteService.createPost(postData);
 
-        console.log("Post data to be submitted:", postData);
+      console.log("Post data to be submitted:", postData);
 
       if (dbPost) navigate(`/post/${dbPost.$id}`);
     } catch (err) {
@@ -181,17 +187,17 @@ export default function PostForm({ post }) {
         {/* Right Section */}
         <div className="flex flex-col">
           <label className="text-gray-700 font-medium mb-2">Location</label>
-          <Select
-            className="mb-4"
-            value={selectedLocation}
-            onChange={(e) => setSelectedLocation(e.target.value)}
+          <select
+            {...register("location", { required: true })}
+            defaultValue={post?.location || "Nepal"}
+            className="border border-gray-300 rounded-lg p-2 mb-4"
           >
             {districts.map((district) => (
               <option key={district.code} value={district.code}>
                 {district.name}
               </option>
             ))}
-          </Select>
+          </select>
 
           <label className="text-gray-700 font-medium mb-2">Post Content</label>
           <textarea
@@ -204,7 +210,6 @@ export default function PostForm({ post }) {
           {/* Featured Images Upload */}
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">Featured Images</label>
-
             <div className="flex items-center gap-3 flex-wrap mb-3">
               {imagePreviews.map((src, idx) => (
                 <div key={idx} className="relative w-24 h-24">
@@ -219,7 +224,6 @@ export default function PostForm({ post }) {
                 </div>
               ))}
 
-              {/* + Add Button */}
               <label
                 htmlFor="imageUpload"
                 className="w-24 h-24 border-2 border-dashed border-gray-300 flex items-center justify-center rounded-md text-3xl font-bold text-gray-500 cursor-pointer hover:border-blue-500 hover:text-blue-500 transition-all duration-200"

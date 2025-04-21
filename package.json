@@ -16,6 +16,7 @@
     "@tensorflow/tfjs": "^4.22.0",
     "bikram-sambat-js": "^1.0.2",
     "i18next": "^24.2.3",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.488.0",
     "notistack": "^3.0.2",
     "react": "^19.1.0",

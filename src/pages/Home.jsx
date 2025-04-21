@@ -7,6 +7,12 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const pastelColors = [
+    'bg-pink-100', 'bg-blue-100', 'bg-green-100',
+    'bg-yellow-100', 'bg-purple-100', 'bg-orange-100',
+    'bg-teal-100', 'bg-rose-100', 'bg-indigo-100', 'bg-lime-100',
+  ];
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -24,43 +30,43 @@ function Home() {
   }, []);
 
   return (
-    <div className="w-full py-10 min-h-[75vh] bg-gray-100">
+    <div className="w-full py-8 min-h-[75vh] bg-gradient-to-b from-pink-50 via-purple-50 to-blue-50">
       <Container>
-        <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 text-center mb-6">
-          Explore the Collection
-        </h1>
-
         {loading ? (
-          <div className="text-center">
-            <h2 className="text-base text-gray-500">Loading posts...</h2>
+          <div className="text-center text-lg text-gray-600 animate-pulse">
+            Loading adorable posts...
           </div>
         ) : error ? (
-          <div className="text-center">
-            <h2 className="text-base text-red-500">{error}</h2>
-            {/* Optionally, you can add a button to retry fetching */}
+          <div className="text-center text-red-500 font-medium">
+            {error}
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center">
-            <h1 className="text-xl font-medium text-gray-600">
-              No posts available. Login to buy.
-            </h1>
+          <div className="text-center text-xl text-gray-500 font-semibold">
+            No posts yet... Login to start exploring!
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
-            {posts.map((post) => (
-              <div
-                key={post.$id}
-                className="transition-transform transform hover:-translate-y-1 hover:shadow-lg"
-              >
-                <PostCard
-                  $id={post.$id}
-                  title={post.title}
-                  featuredImage={Array.isArray(post.featuredImage) ? post.featuredImage : [post.featuredImage]} // Normalize to array
-                  rate={post.rate}
-                  dateAD={post.dateAD}
-                />
-              </div>
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 px-2 sm:px-0">
+            {posts.map((post) => {
+              const randomBg = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+              return (
+                <div
+                  key={post.$id}
+                  className={`rounded-xl p-3 shadow-md hover:shadow-xl hover:scale-[1.03] transition-all duration-300 ${randomBg} aspect-[3/4] min-w-0`}
+                >
+                  <PostCard
+                    $id={post.$id}
+                    title={post.title}
+                    featuredImage={
+                      Array.isArray(post.featuredImage)
+                        ? post.featuredImage
+                        : [post.featuredImage]
+                    }
+                    rate={post.rate}
+                    dateAD={post.dateAD}
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
       </Container>

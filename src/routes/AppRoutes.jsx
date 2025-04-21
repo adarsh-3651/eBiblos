@@ -6,6 +6,8 @@ import EditPost from "../pages/EditPost.jsx";
 import Post from "../pages/ProductCard.jsx";
 import AllPosts from "../pages/AllProducts.jsx";
 import { AuthLayout } from "../components/index.js";
+import DashboardPage from "../components/Dashboardpage.jsx";
+
 
 const appRoutes = [
   {
@@ -38,6 +40,9 @@ const appRoutes = [
         ),
       },
       { path: "/post/:slug", element: <Post /> },
+      { path: "/dashboardPage", element: <DashboardPage /> },
+      {path: "/editpost/:postId", element: <EditPost/>},
+
     ],
   },
 ];
