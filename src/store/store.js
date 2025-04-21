@@ -1,14 +1,12 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import authSlice from './authSlice';
-import postSclice from './authSlice';
+import themeReducer from './themeSlice'; // Import your themeSlice
 
 const store = configureStore({
-    reducer: {
-        auth : authSlice,
-        post : postSclice,
-        //TODO: add more slices here for posts
-    }
+  reducer: {
+    auth: authSlice,
+    theme: themeReducer, // Include themeReducer in your store
+  },
 });
-
 
 export default store;

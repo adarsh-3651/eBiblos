@@ -1,11 +1,14 @@
 import React from 'react';
+import { Signup as SignupForm } from '../components';
 
-export const Signup = () => {
+const Signup = () => {
   return (
-    <div>
-      {/* Your signup form implementation */}
-      <h2>Sign Up</h2>
+    <>
+      <SignupForm />
+      <h1 className="text-2xl font-bold text-gray-600">Sign Up</h1>
       {/* Add form fields, buttons, etc. */}
-    </div>
+    </>
   );
 };
+
+export default Signup;

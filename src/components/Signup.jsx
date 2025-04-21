@@ -5,6 +5,8 @@ import { login } from "../store/authSlice";
 import { Button, Input, Logo } from "./index.js";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+import googleLogo from "../google.jpg";
+import loginImage from "../login_image.jpeg"; // Adjust path if it's in a different folder
 
 function Signup() {
     const navigate = useNavigate();
@@ -13,7 +15,6 @@ function Signup() {
     const { register, handleSubmit } = useForm();
 
     const create = async (data) => {
-        console.log("Sign-Up form submitted:", data);
         setError("");
         try {
             const userData = await authService.createAccount(data);
@@ -24,80 +25,120 @@ function Signup() {
             const userDetails = await authService.getCurrentUser();
             if (userDetails) {
                 dispatch(login(userDetails));
-                navigate("/login");
+                navigate("/");
             }
         } catch (error) {
-            console.error("Sign-up error:", error);
             setError(error.message || "Something went wrong. Please try again.");
         }
     };
 
+    const handleGoogleSignup = async () => {
+        setError("");
+        try {
+            const response = await authService.loginWithGoogle();
+            if (response) {
+                const userData = await authService.getCurrentUser();
+                if (userData) dispatch(login(userData));
+                navigate("/");
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
     return (
-        <div className="relative w-full h-screen flex justify-center items-center bg-cover bg-center backdrop-blur-lg">
-            {/* Background Blur Overlay */}
-            <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-md"></div>
+        <div className="flex min-h-screen w-full">
+            {/* Left: Signup Form */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+                <div className="max-w-md w-full space-y-6">
+                    <h2 className="text-3xl font-bold text-gray-900">Get Started Now</h2>
 
-            {/* Floating Glass Form */}
-            <div className="relative z-10 bg-white bg-opacity-10 backdrop-blur-xl shadow-2xl border border-white/20 rounded-xl p-8 w-full max-w-md">
-                {/* Logo */}
-                <div className="flex justify-center mb-4">
-                    <Logo width="80px" />
+                    {/* Error Message */}
+                    {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+                    <form onSubmit={handleSubmit(create)} className="space-y-5">
+                        <Input
+                            label="Name"
+                            placeholder="Enter your name"
+                            className="w-full border border-gray-300 px-4 py-3 rounded-lg text-sm"
+                            {...register("name", { required: true })}
+                        />
+                        <Input
+                            label="Email address"
+                            placeholder="Enter your email"
+                            type="email"
+                            className="w-full border border-gray-300 px-4 py-3 rounded-lg text-sm"
+                            {...register("email", {
+                                required: "Email is required",
+                                pattern: {
+                                    value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                                    message: "Invalid email address",
+                                },
+                            })}
+                        />
+                        <Input
+                            label="Password"
+                            type="password"
+                            placeholder="Password"
+                            className="w-full border border-gray-300 px-4 py-3 rounded-lg text-sm"
+                            {...register("password", { required: true })}
+                        />
+
+                        <Button
+                            type="submit"
+                            className="w-full bg-green-700 text-white py-3 rounded-lg font-semibold hover:bg-green-800 transition"
+                        >
+                            Signup
+                        </Button>
+                    </form>
+
+                    {/* Or divider */}
+                    <div className="flex items-center justify-center gap-3">
+                        <span className="h-px bg-gray-300 flex-1" />
+                        <span className="text-sm text-gray-500">or</span>
+                        <span className="h-px bg-gray-300 flex-1" />
+                    </div>
+
+                    {/* Google / Apple Signup */}
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <button
+                            onClick={handleGoogleSignup}
+                            className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition"
+                        >
+                            <img src={googleLogo} alt="Google" className="w-5 h-5" />
+                            <span className="text-sm font-medium">Sign in with Google</span>
+                        </button>
+                        <button
+                            className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition"
+                        >
+                            <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+                                alt="Apple"
+                                className="w-5 h-5"
+                            />
+                            <span className="text-sm font-medium">Sign in with Apple</span>
+                        </button>
+                    </div>
+
+                    <p className="text-sm text-center text-gray-600">
+                        Have an account?{" "}
+                        <Link to="/login" className="text-blue-600 hover:underline">
+                            Sign In
+                        </Link>
+                    </p>
                 </div>
-
-                <h2 className="text-center text-2xl font-bold text-white">Sign Up</h2>
-                <p className="mt-2 text-center text-sm text-gray-300">
-                    Already have an account?&nbsp;
-                    <Link
-                        to="/login"
-                        className="font-medium text-blue-400 transition-all duration-200 hover:underline"
-                    >
-                        Sign In
-                    </Link>
-                </p>
-
-                {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
-
-                {/* Form */}
-                <form onSubmit={handleSubmit(create)} className="mt-6 space-y-5">
-                    <Input
-                        label="Full Name"
-                        placeholder="Enter your full name"
-                        className="bg-white bg-opacity-20 backdrop-blur-lg text-white placeholder-gray-300 border border-white/30 rounded-lg px-4 py-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-300"
-                        {...register("name", { required: true })}
-                    />
-                    <Input
-                        label="Email"
-                        placeholder="Enter your email"
-                        type="email"
-                        className="bg-white bg-opacity-20 backdrop-blur-lg text-white placeholder-gray-300 border border-white/30 rounded-lg px-4 py-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-300"
-                        {...register("email", {
-                            required: "Email is required",
-                            pattern: {
-                                value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-                                message: "Email address must be valid",
-                            },
-                        })}
-                    />
-                    <Input
-                        label="Password"
-                        type="password"
-                        placeholder="Enter your password"
-                        className="bg-white bg-opacity-20 backdrop-blur-lg text-white placeholder-gray-300 border border-white/30 rounded-lg px-4 py-2 focus:border-blue-400 focus:ring-2 focus:ring-blue-300"
-                        {...register("password", { required: true })}
-                    />
-
-                    {/* WOW Button */}
-                    <Button
-                        type="submit"
-                        className="w-full text-white text-lg font-semibold py-3 px-5 rounded-lg transition-all duration-300 
-                            bg-gradient-to-r from-blue-500 to-purple-600 
-                            hover:from-purple-600 hover:to-blue-500 
-                            shadow-lg transform hover:scale-105"
-                    >
-                        Create Account
-                    </Button>
-                </form>
             </div>
+
+            {/* Right: Image Section */}
+<div className="hidden lg:flex w-1/2 bg-white items-center justify-center">
+    <div className="w-full h-full">
+        <div
+            className="w-full h-full bg-contain bg-no-repeat bg-center rounded-bl-[50px] rounded-tl-[20px] rounded-tr-[20px]" // Adjust border-radius here
+            style={{ backgroundImage: `url(${loginImage})` }}
+        />
+    </div>
+</div>
+
         </div>
     );
 }

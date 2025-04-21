@@ -16,31 +16,93 @@ export class Service {
         this.account = new Account(this.client);
     }
 
-    async createPost({ title, slug, content, featuredImage, status, userId }) {
+    // Create a new post with multiple images
+    async createPost({
+        title,
+        slug,
+        content,
+        featuredImage = [],
+        status,
+        userId,
+        postedBy, // <-- add this
+        rate,
+        dateAD,
+        dateBS,
+        phoneNo,
+        location,
+        category,
+    }) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                ID.unique(), // Generate a unique ID instead of using slug
-                { title, slug, content, featuredImage, status, userId }
+                ID.unique(),
+                {
+                    title,
+                    slug,
+                    content,
+                    featuredImage,
+                    status,
+                    userId,
+                    postedBy, // <-- include it here too
+                    rate,
+                    dateAD,
+                    dateBS,
+                    phoneNo,
+                    location,
+                    category,
+                }
             );
         } catch (error) {
-            console.error("Appwrite service error: createPost:", error);
+            console.error("Appwrite service error: createPost", error);
+            throw error;
         }
     }
+    
 
-    async updatePost(postId, { title, content, featuredImage, status, userId }) {
+    // Update post with multiple images
+    async updatePost(postId, {
+        title,
+        slug,
+        content,
+        featuredImage = [],
+        status,
+        userId,
+        postedBy, // <-- add here
+        rate,
+        dateAD,
+        dateBS,
+        phoneNo,
+        location,
+        category,
+    }) {
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 postId,
-                { title, content, featuredImage, status, userId }
+                {
+                    title,
+                    slug,
+                    content,
+                    featuredImage,
+                    status,
+                    userId,
+                    postedBy, // <-- and include here
+                    rate,
+                    dateAD,
+                    dateBS,
+                    phoneNo,
+                    location,
+                    category,
+                }
             );
         } catch (error) {
             console.error("Appwrite service error: updatePost", error);
+            throw error;
         }
     }
+    
 
     async deletePost(postId) {
         try {
@@ -82,12 +144,12 @@ export class Service {
 
     async uploadFile(file) {
         try {
-            const response = await this.bucket.createFile(
+            const result = await this.bucket.createFile(
                 conf.appwriteBucketId,
                 ID.unique(),
-                file,
+                file
             );
-            return response;
+            return result.$id;
         } catch (error) {
             console.error("Error uploading file:", error);
             throw new Error("Failed to upload file.");
@@ -104,13 +166,31 @@ export class Service {
         }
     }
 
-    async getFilePreview(fileId) {
+    // Get view URLs for an array of fileIds
+    async getFilePreviews(fileIds) {
         try {
-            return this.bucket.getFileDownload(conf.appwriteBucketId, fileId);
-          } catch (error) {
-            console.error("Appwrite service error: getFileURL", error);
-          }
+            console.log("File IDs:", fileIds); // Debugging line
+            if (!Array.isArray(fileIds)) return [];
+
+            const previews = fileIds.map((fileId) => {
+                return this.bucket.getFileView(conf.appwriteBucketId, fileId);
+            });
+
+            return previews; // array of preview URLs (promises are not awaited because getFileView is synchronous)
+        } catch (error) {
+            console.error("Appwrite service error: getFilePreviews", error);
+            return [];
         }
+    }
+
+    async getCurrentUser() {
+        try {
+            return await this.account.get();
+        } catch (error) {
+            console.error("Appwrite service error: getCurrentUser", error);
+            return null;
+        }
+    }
 }
 
 const service = new Service();

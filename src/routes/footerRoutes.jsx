@@ -1,11 +1,11 @@
 // src/routes/footerRoutes.js
-import Account from "../pages/Account.jsx";
-import Help from "../pages/Help.jsx";
-import Contact from "../pages/Contact.jsx";
-import Support from "../pages/Support.jsx";
-import Terms from "../pages/Terms.jsx";
-import Privacy from "../pages/Privacy.jsx";
-import Licensing from "../pages/Licensing.jsx";
+import Account from "../pages/Footer/Account.jsx";
+import Help from "../pages/Footer/Help.jsx";
+import Contact from "../pages/Footer/Contact.jsx";
+import Support from "../pages/Footer/Support.jsx";
+import Terms from "../pages/Footer/TermsAndCondition.jsx";
+import Privacy from "../pages/Footer/Privacy.jsx";
+import Licensing from "../pages/Footer/Licensing.jsx";
 
 const footerRoutes = [
   { path: "/account", element: <Account /> },
