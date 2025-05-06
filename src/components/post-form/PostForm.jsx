@@ -5,6 +5,7 @@ import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { districts } from "../../components/Location";
 import Swal from "sweetalert2";
+import { classifyImage } from "../../utils/classifyImage";
 
 export default function PostForm({ post }) {
   const {
@@ -28,6 +29,8 @@ export default function PostForm({ post }) {
   const navigate = useNavigate();
   const [imagePreviews, setImagePreviews] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
+  const [uploadedImageIds, setUploadedImageIds] = useState(post?.featuredImage || []);
+  const [removedImageIds, setRemovedImageIds] = useState([]);
   const [currentUsername, setCurrentUsername] = useState("");
   const [userId, setUserId] = useState("");
 
@@ -43,55 +46,79 @@ export default function PostForm({ post }) {
   }, []);
 
   useEffect(() => {
-    if (post?.previewImages?.length) {
-      console.log("Preview images received:", post.previewImages);
-      setImagePreviews(post.previewImages);
-    }
+    const loadPreviews = async () => {
+      if (post?.featuredImage?.length) {
+        const urls = await appwriteService.getFilePreviews(post.featuredImage);
+        setImagePreviews(urls);
+      }
+    };
+    loadPreviews();
   }, [post]);
 
-  const formatDate = (date) => {
-    return new Date(date).toISOString().split("T")[0];
-  };
-
   const handleDateADChange = (e) => {
-    const adDate = e.target.value;
-    setValue("dateAD", formatDate(adDate));
+    setValue("dateAD", new Date(e.target.value).toISOString().split("T")[0]);
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
-    const newPreviews = files.map((file) => URL.createObjectURL(file));
-    setImageFiles((prev) => [...prev, ...files]);
-    setImagePreviews((prev) => [...prev, ...newPreviews]);
+
+    for (const file of files) {
+      const imageURL = URL.createObjectURL(file);
+      const img = new Image();
+      img.src = imageURL;
+      img.crossOrigin = "anonymous";
+
+      img.onload = async () => {
+        try {
+          const predictions = await classifyImage(img);
+          console.log("Predictions:", predictions);
+
+          const isBook = predictions.some((pred) =>
+            pred.className.toLowerCase().includes("book")
+          );
+
+          if (isBook) {
+            setImageFiles((prev) => [...prev, file]);
+            setImagePreviews((prev) => [...prev, imageURL]);
+          } else {
+            Swal.fire("Invalid Image", "This doesn't look like a book.", "warning");
+          }
+        } catch (err) {
+          console.error("Error classifying image:", err);
+          Swal.fire("Error", "Failed to classify the image.", "error");
+        }
+      };
+    }
   };
 
   const removeImage = (index) => {
+    if (index < uploadedImageIds.length) {
+      const imageIdToRemove = uploadedImageIds[index];
+      setRemovedImageIds((prev) => [...prev, imageIdToRemove]);
+      setUploadedImageIds((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      const adjustedIndex = index - uploadedImageIds.length;
+      setImageFiles((prev) => prev.filter((_, i) => i !== adjustedIndex));
+    }
+
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
-    setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const generateSlug = (title) => {
-    const lowerTitle = title.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
-    return `${lowerTitle}-${Date.now()}`;
-  };
+  const generateSlug = (title) =>
+    `${title.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-")}-${Date.now()}`;
 
   const submit = async (data) => {
     try {
-      if (imageFiles.length === 0) {
-        Swal.fire("Image Required", "Please upload at least one image.", "warning");
-        return;
+      const slug = generateSlug(data.title);
+      let finalImageIds = [...uploadedImageIds];
+
+      for (const file of imageFiles) {
+        const id = await appwriteService.uploadFile(file);
+        if (id) finalImageIds.push(id);
       }
 
-      const slug = generateSlug(data.title);
-      let uploadedImageIds = post?.featuredImage || [];
-
-      for (let image of imageFiles) {
-        try {
-          const imageId = await appwriteService.uploadFile(image);
-          if (imageId) uploadedImageIds.push(imageId);
-        } catch (err) {
-          console.error("Image upload failed for:", image.name);
-        }
+      for (const fileId of removedImageIds) {
+        await appwriteService.deleteFile(fileId);
       }
 
       const postData = {
@@ -99,17 +126,14 @@ export default function PostForm({ post }) {
         rate: parseFloat(data.rate),
         slug,
         userId,
-        username: currentUsername,
         postedBy: currentUsername,
         status: "active",
-        featuredImage: uploadedImageIds,
+        featuredImage: finalImageIds,
       };
 
       const dbPost = post
         ? await appwriteService.updatePost(post.$id, postData)
         : await appwriteService.createPost(postData);
-
-      console.log("Post data to be submitted:", postData);
 
       if (dbPost) navigate(`/post/${dbPost.$id}`);
     } catch (err) {
@@ -132,7 +156,6 @@ export default function PostForm({ post }) {
             className="mb-4"
             {...register("title", { required: true })}
           />
-
           <Input
             label="Rate (Rs)"
             type="number"
@@ -143,8 +166,6 @@ export default function PostForm({ post }) {
               min: { value: 0, message: "Must be positive" },
             })}
           />
-          {errors.rate && <p className="text-red-500 text-sm">{errors.rate.message}</p>}
-
           <Input
             label="Valid Till (AD)"
             type="date"
@@ -153,7 +174,6 @@ export default function PostForm({ post }) {
             onChange={handleDateADChange}
             required
           />
-
           <label className="text-gray-700 font-medium mb-2">Category</label>
           <select
             {...register("category", { required: true })}
@@ -167,11 +187,9 @@ export default function PostForm({ post }) {
             <option value="Self-Help">Self-Help</option>
             <option value="Children's Books">Children's Books</option>
           </select>
-
           <Input
             label="Phone Number"
             type="tel"
-            placeholder="10-digit phone number"
             className="mb-4"
             {...register("phoneNo", {
               required: "Phone number is required",
@@ -198,7 +216,6 @@ export default function PostForm({ post }) {
               </option>
             ))}
           </select>
-
           <label className="text-gray-700 font-medium mb-2">Post Content</label>
           <textarea
             {...register("content", { required: true })}
@@ -206,8 +223,6 @@ export default function PostForm({ post }) {
             placeholder="Write a detailed description here..."
             className="border border-gray-300 rounded-lg p-3 mb-4 resize-none"
           />
-
-          {/* Featured Images Upload */}
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">Featured Images</label>
             <div className="flex items-center gap-3 flex-wrap mb-3">
@@ -223,11 +238,9 @@ export default function PostForm({ post }) {
                   </button>
                 </div>
               ))}
-
               <label
                 htmlFor="imageUpload"
                 className="w-24 h-24 border-2 border-dashed border-gray-300 flex items-center justify-center rounded-md text-3xl font-bold text-gray-500 cursor-pointer hover:border-blue-500 hover:text-blue-500 transition-all duration-200"
-                title="Click to add images"
               >
                 +
               </label>

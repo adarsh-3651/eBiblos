@@ -25,10 +25,10 @@ function Footer() {
               Company
             </h3>
             <ul className="space-y-3">
-              <li><Link className="hover:text-blue-400 transition-colors" to="/">Features</Link></li>
-              <li><Link className="hover:text-blue-400 transition-colors" to="/">Pricing</Link></li>
-              <li><Link className="hover:text-blue-400 transition-colors" to="/">Affiliate Program</Link></li>
-              <li><Link className="hover:text-blue-400 transition-colors" to="/">Press Kit</Link></li>
+              <li><Link className="hover:text-blue-400 transition-colors" to="/features">Features</Link></li>
+              <li><Link className="hover:text-blue-400 transition-colors" to="/pricing">Pricing</Link></li>
+              <li><Link className="hover:text-blue-400 transition-colors" to="/affiliate">Affiliate Program</Link></li>
+              <li><Link className="hover:text-blue-400 transition-colors" to="/presskit">Press Kit</Link></li>
             </ul>
           </div>
 
@@ -52,6 +52,7 @@ function Footer() {
               <li><Link className="hover:text-blue-400 transition-colors" to="/terms">Terms &amp; Conditions</Link></li>
               <li><Link className="hover:text-blue-400 transition-colors" to="/privacy">Privacy Policy</Link></li>
               <li><Link className="hover:text-blue-400 transition-colors" to="/licensing">Licensing</Link></li>
+
             </ul>
           </div>
         </div>

@@ -6,6 +6,7 @@ export class AuthService {
     account;
     databases;
     bucket;
+    
 
     constructor() {
         this.client
@@ -115,15 +116,7 @@ export class AuthService {
         }
     }
 
-    async deleteAccount(userId) {
-        try {
-            await this.account.delete(userId);
-            return true;
-        } catch (error) {
-            console.error("Delete Account Error:", error.message);
-            return false;
-        }
-    }
+
     async updateAccount({ name, phone, address }) {
         try {
             await this.account.updateName(name);

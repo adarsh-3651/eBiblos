@@ -4,7 +4,7 @@ import EditPost from "../pages/EditPost";
 
 const other = [
   { path: "/dashboardPage", element: <DashboardPage /> },
-  {path: "/editpost/:postId", element: <EditPost/>},
+  {path: "/editpost/:slug", element: <EditPost/>},
 
 ];
 
