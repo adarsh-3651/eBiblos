@@ -43,7 +43,7 @@ export default function Cart() {
     setCart(updated); // Update state
   };
 
-  // Calculate total price
+ 
   const total = posts.reduce((sum, p) => sum + parseFloat(p.rate || 0), 0);
 
   return (
