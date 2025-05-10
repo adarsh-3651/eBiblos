@@ -1,11 +1,11 @@
-// src/App.jsx
+
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './HomePage';
 import Login from './Login';
 import Signup from './Signup';
 
-// Import or create placeholder components for other pages
+// Import or create placeholder components for other 
 const ReaderPage = () => <div className="p-4"><h1 className="text-2xl font-bold">Reader Page</h1></div>;
 const ProfilePage = () => <div className="p-4"><h1 className="text-2xl font-bold">Profile Page</h1></div>;
 const BookDetailPage = () => <div className="p-4"><h1 className="text-2xl font-bold">Book Detail Page</h1></div>;
