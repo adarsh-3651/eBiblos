@@ -127,6 +127,18 @@ export class AuthService {
             return false;
         }
     }
+
+    async getUsers() {
+    try {
+        return await this.databases.listDocuments(
+            conf.appwriteDatabaseId,
+            conf.appwriteUsersCollectionId // This should point to users collection
+        );
+    } catch (error) {
+        console.error("Appwrite service error: getUsers", error);
+        return { documents: [] };
+    }
+    }
 }
 
 const authService = new AuthService();
