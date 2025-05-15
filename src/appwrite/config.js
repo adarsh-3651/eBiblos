@@ -1,5 +1,6 @@
 import conf from "../conf/conf";
 import { Client, ID, Databases, Storage, Query, Account } from "appwrite";
+import { Permission, Role } from "appwrite";
 
 export class Service {
     client = new Client();
@@ -189,6 +190,113 @@ export class Service {
         } catch (error) {
             console.error("Appwrite service error: getCurrentUser", error);
             return null;
+        }
+    }
+
+
+    async createBid(postId, buyerId, sellerId, bidAmount) {
+        try {
+          return await this.databases.createDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteBidsCollectionId,
+            ID.unique(),
+            {
+              postId,
+              buyerId,
+              sellerId,
+              bidAmount,
+              accepted: false,
+            },
+            [
+              Permission.read(Role.user(buyerId)),
+              Permission.write(Role.user(sellerId)),
+              Permission.update(Role.user(sellerId)),
+              Permission.create(Role.user(buyerId))
+            ]
+          );
+        } catch (error) {
+          console.log("Appwrite service error: createBid", error);
+          throw error;
+        }
+      }
+      
+    
+    
+
+    
+    async handleBidSubmit(){
+        try {
+          const result = await appwriteService.createBid({
+            postId: post.$id,
+            buyerId: currentUser.$id,
+            sellerId: post.userId,
+            amount: bidAmount,
+          });
+      
+          console.log("Bid created:", result);
+        } catch (err) {
+          console.error("Bid error:", err);
+        }
+      };
+
+    async updateBidStatus(bidId, status) {
+        try {
+            return await this.databases.updateDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteBidsCollectionId,
+                bidId,
+                { status }
+            );
+        } catch (error) {
+            console.error("updateBidStatus error", error);
+            throw error;
+        }
+    }
+
+    // ----- Notifications -----
+    async sendNotification({ userId, message, link = "", type = "info", read = false }) {
+        try {
+            return await this.databases.createDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteNotificationsCollectionId,
+                ID.unique(),
+                {
+                    userId,
+                    message,
+                    link,
+                    type,
+                    read,
+                }
+            );
+        } catch (error) {
+            console.error("sendNotification error", error);
+            throw error;
+        }
+    }
+
+    async markNotificationsRead(userId) {
+        const res = await databases.listDocuments(DB_ID, NOTIFICATIONS_COLLECTION, [
+          Query.equal('userId', userId),
+          Query.equal('read', false),
+        ]);
+        for (const doc of res.documents) {
+          await databases.updateDocument(DB_ID, NOTIFICATIONS_COLLECTION, doc.$id, {
+            read: true,
+          });
+        }
+    }
+      
+
+    async getNotifications(userId) {
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteNotificationsCollectionId,
+                [Query.equal("userId", userId), Query.orderDesc("$createdAt")]
+            );
+        } catch (error) {
+            console.error("getNotifications error", error);
+            return [];
         }
     }
 }
