@@ -17,6 +17,7 @@ export const districts = [
     { name: "Kailali (कैलाली)", code: "Kailali" },
     { name: "Kaski (कास्की)", code: "Kaski" },
     { name: "Kathmandu (काठमाडौं)", code: "Kathmandu" },
+    { name: "Biratnagar (विराटनगर)", code: "Biratnagar" },
     { name: "Khotang (खोटाङ)", code: "Khotang" },
     { name: "Lalitpur (ललितपुर)", code: "Lalitpur" },
     { name: "Makwanpur (मकवानपुर)", code: "Makwanpur" },
@@ -50,7 +51,6 @@ export const districts = [
     { name: "Bardiya (बर्दिया)", code: "Bardiya" },
     { name: "Barun (बारुण)", code: "Barun" },
     { name: "Bhojpur (भोजपुर)", code: "Bhojpur" },
-    { name: "Chitwan (चितवन)", code: "Chitwan" },
     { name: "Dadeldhura (दादेलधुरा)", code: "Dadeldhura" },
     { name: "Dhanusa (धनुषा)", code: "Dhanusa" },
     { name: "Dholgiri (धोलगिरी)", code: "Dholgiri" },
@@ -59,7 +59,6 @@ export const districts = [
     { name: "Humla (हुम्ला)", code: "Humla" },
     { name: "Ilama (इलाम)", code: "Ilama" },
     { name: "Jajarkot (जाजरकोट)", code: "Jajarkot" },
-    { name: "Jajarkot (जाजरकोट)", code: "Jajarkot" }
   ];
   
   

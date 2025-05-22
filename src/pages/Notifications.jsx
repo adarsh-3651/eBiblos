@@ -1,61 +1,97 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import appwriteService from "../appwrite/config";
+import { BellIcon } from "lucide-react";
 
-function Notifications() {
+export default function Notifications() {
+  const [buyerId, setBuyerId] = useState("");
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetch = async () => {
-      const user = await appwriteService.getCurrentUser();
-      if (user) {
-        const res = await appwriteService.getNotifications(user.$id);
-        setNotifications(res.documents || []);
+    const fetchBuyerAndNotifications = async () => {
+      try {
+        const user = await appwriteService.getCurrentUser();
+        if (user) {
+          setBuyerId(user.$id);
+          const notifResponse = await appwriteService.getNotificationsByBuyerId(user.$id);
+          setNotifications(notifResponse.documents || []);
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetch();
+
+    fetchBuyerAndNotifications();
   }, []);
 
-  const handleAccept = async (bidId, buyerId, title) => {
-    await appwriteService.updateBidStatus(bidId, "accepted");
-    await appwriteService.sendNotification({
-      userId: buyerId,
-      message: `Your bid for "${title}" was accepted!`,
-      type: "bid-accepted",
-    });
-    alert("Bid accepted!");
-  };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-gray-500 text-lg animate-pulse">Loading your notifications...</p>
+      </div>
+    );
+  }
 
-  const handleReject = async (bidId) => {
-    await appwriteService.updateBidStatus(bidId, "rejected");
-    alert("Bid rejected.");
-  };
+  if (notifications.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-gray-500 text-lg">🔔 You have no notifications yet.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-xl font-bold mb-4">Notifications</h1>
-      {notifications.map((note) => (
-        <div key={note.$id} className="bg-white dark:bg-slate-800 p-4 shadow rounded mb-4">
-          <p>{note.message}</p>
-          {note.type === "bid" && (
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={() => handleAccept(note.bidId, note.buyerId, note.title)}
-                className="bg-green-500 px-3 py-1 text-white rounded"
-              >
-                Accept
-              </button>
-              <button
-                onClick={() => handleReject(note.bidId)}
-                className="bg-red-500 px-3 py-1 text-white rounded"
-              >
-                Reject
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-md border border-gray-200">
+      <div className="flex items-center gap-2 mb-6">
+        <BellIcon className="w-6 h-6 text-blue-500" />
+        <h2 className="text-2xl font-bold text-gray-800">Notifications</h2>
+      </div>
+
+      <div className="space-y-4 max-h-[28rem] overflow-y-auto pr-2">
+        {notifications.map((notif) => (
+          <div key={notif.$id} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200">
+            {notif.messages && notif.messages.length > 0 ? (
+              <ul className="space-y-2">
+                {notif.messages.map((msg, index) => {
+                  const postId = notif.postId; // assuming this is included
+                  const pattern = /"(.+?)"/; // match the product title in quotes
+                  const match = msg.match(pattern);
+                  const productTitle = match ? match[1] : null;
+
+                  return (
+                    <li
+                      key={index}
+                      className="text-gray-800 bg-white p-2 rounded shadow-sm border border-gray-100"
+                    >
+                      <span className="block">
+                        {productTitle && postId ? (
+                          <>
+                            {msg.split(`"${productTitle}"`)[0]}
+                            <Link
+                              to={`/post/${postId}`}
+                              className="text-blue-600 underline hover:text-blue-800"
+                            >
+                              "{productTitle}"
+                            </Link>
+                            {msg.split(`"${productTitle}"`)[1]}
+                          </>
+                        ) : (
+                          msg
+                        )}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <p className="text-gray-500 italic">No messages in this notification.</p>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-
-export default Notifications;

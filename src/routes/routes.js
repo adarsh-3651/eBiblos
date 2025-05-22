@@ -1,7 +1,7 @@
 // src/routes/routes.js
 import { createBrowserRouter } from "react-router-dom";
 import authRoutes from "./authRoutes.jsx";
-import appRoutes from "./appRoutes.jsx";
+import appRoutes from "./AppRoutes.jsx";
 import footerRoutes from "./footerRoutes.jsx";
 import googleRoutes from "./googleRoutes.jsx";
 import other from "./other.jsx"; // Import other routes if needed

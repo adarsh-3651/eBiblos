@@ -1,4 +1,4 @@
-import DashboardPage from "../components/Dashboardpage";
+import DashboardPage from "../components/DashboardPage.jsx";
 import EditPost from "../pages/EditPost";
 
 

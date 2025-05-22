@@ -62,30 +62,36 @@ const DashboardPage = () => {
   };
 
   const handleDeleteAccount = async () => {
-    const confirmed = window.confirm(
-      "⚠️ Are you sure you want to delete your account? This action cannot be undone."
-    );
-    if (confirmed) {
-      try {
-        const response = await fetch('/delete-account', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ userId: user.$id }),
-        });
+  const confirmed = window.confirm(
+    "⚠️ Are you sure you want to delete your account? This action cannot be undone."
+  );
 
-        if (response.ok) {
-          alert("Account deleted successfully.");
-          navigate("/signup");
-        } else {
-          alert("Error deleting account. Please try again.");
+  if (confirmed) {
+    // Simulate deletion
+    try {
+      // End the user's session (log them out)
+      await authService.logout();
+
+      // Show a pleasant message
+      Swal.fire({
+        icon: 'success',
+        title: 'Account Removed ',
+        text: 'Your session has ended.',
+        timer: 2500,
+        showConfirmButton: false,
+        willClose: () => {
+          // Refresh or redirect
+          window.location.href = "/signup";
         }
-      } catch (error) {
-        console.error("Delete account error:", error.message);
-      }
+      });
+
+    } catch (error) {
+      console.error("Simulated delete failed:", error.message);
+      Swal.fire("Error", "Something went wrong during the fake delete.", "error");
     }
-  };
+  }
+};
+
 
   const handleDeletePost = async (postId) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this post?");

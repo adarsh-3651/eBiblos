@@ -108,6 +108,11 @@ export default function PostForm({ post }) {
       const dbPost = post
         ? await appwriteService.updatePost(post.$id, postData)
         : await appwriteService.createPost(postData);
+        Swal.fire(
+        "Success",
+        post ? "Post updated successfully!" : "Post created successfully!",
+        "success"
+      );
 
       console.log("Post data to be submitted:", postData);
 
